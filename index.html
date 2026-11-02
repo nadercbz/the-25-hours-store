@@ -1,0 +1,154 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta name="robots" content="noindex, nofollow">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>The 25 Hours Store · Dein Späti im Märkisches Zentrum Berlin</title>
+<meta name="description" content="The 25 Hours Store im Märkisches Zentrum Berlin. Komm rein und schau dich um: kalte Drinks, Snacks, Fruchtgummi, Eis, Bier und Wein, Zeitung und alles für zwischendurch.">
+<meta name="theme-color" content="#0b0a0c">
+<meta property="og:title" content="The 25 Hours Store · Komm rein">
+<meta property="og:description" content="Ein Tag hat 24 Stunden. Wir haben eine mehr. Der Späti zum Reinlaufen, direkt im Browser.">
+<meta property="og:image" content="https://nadercbz.github.io/the-25-hours-store/assets/og.jpg">
+<meta property="og:type" content="website">
+<link rel="icon" href="assets/logo/favicon.png">
+<link rel="preload" href="fonts/bigshoulders.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="fonts/dmsans.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="css/fonts.css?v=202611021939">
+<link rel="stylesheet" href="css/style.css?v=202611021939">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"ConvenienceStore","name":"The 25 Hours Store","address":{"@type":"PostalAddress","streetAddress":"Wilhelmsruher Damm 140","postalCode":"13439","addressLocality":"Berlin","addressCountry":"DE"},"telephone":"+49 30 4155448","containedInPlace":{"@type":"ShoppingCenter","name":"Märkisches Zentrum"}}
+</script>
+</head>
+<body class="laedt" data-ort="vorne">
+
+<h1 class="sr">The 25 Hours Store, Späti im Märkisches Zentrum Berlin</h1>
+<p class="sr" aria-live="polite" id="ansage"></p>
+
+<!-- Ladebild -->
+<div class="lader" id="lader" aria-hidden="true">
+  <img class="lader__logo" src="assets/logo/logo-m.webp" alt="">
+  <div class="lader__balken"><i id="ladeBalken"></i></div>
+  <p class="lader__text">Licht geht an</p>
+</div>
+
+<!-- Bühne: WebGL Szene, darüber Video für die Kamerafahrten -->
+<main class="buehne" id="buehne">
+  <canvas id="gl" aria-hidden="true"></canvas>
+  <img id="glErsatz" class="buehne__ersatz" alt="" hidden>
+  <video id="fahrt" class="buehne__video" muted playsinline preload="auto" disablepictureinpicture aria-hidden="true"></video>
+  <div class="buehne__schleier"></div>
+  <div class="punkte" id="punkte"></div>
+  <div class="randpfeile" id="randpfeile"></div>
+</main>
+
+<!-- Kopfzeile -->
+<header class="kopf">
+  <button class="kopf__logo" id="logoKnopf" aria-label="Über The 25 Hours Store">
+    <img src="assets/logo/logo-m.webp" alt="The 25 Hours Store" width="320" height="80">
+  </button>
+  <div class="status" id="status"><i></i><span>…</span></div>
+  <nav class="kopf__nav" aria-label="Hauptmenü">
+    <a href="#/laden" data-nav="laden">Sortiment</a>
+    <a href="#/ueber-uns">Über uns</a>
+    <a href="#/besuch">Besuch</a>
+    <a href="#/impressum">Impressum</a>
+    <button class="ton" id="ton" aria-pressed="true" aria-label="Ton an oder aus"><span></span><span></span><span></span></button>
+  </nav>
+  <button class="kopf__menue" id="menueKnopf" aria-label="Menü öffnen" aria-expanded="false"><span></span><span></span></button>
+</header>
+
+<!-- Handy Menü -->
+<div class="menue" id="menue" hidden>
+  <nav aria-label="Menü">
+    <a href="#/">Vor dem Laden</a>
+    <a href="#/laden">Im Laden</a>
+    <a href="#/ueber-uns">Über uns</a>
+    <a href="#/besuch">Besuch und Öffnungszeiten</a>
+    <a href="#/impressum">Impressum</a>
+    <a href="#/datenschutz">Datenschutz</a>
+  </nav>
+  <button class="ton ton--gross" id="tonMenue" aria-label="Ton an oder aus">Ton an</button>
+</div>
+
+<!-- Texte je Szene -->
+<section class="tafel tafel--vorne" id="tafelVorne" aria-label="Vor dem Laden">
+  <p class="tafel__kicker">Märkisches Zentrum · Berlin</p>
+  <h2 class="tafel__titel"><span>Ein Tag hat 24 Stunden.</span><span class="neon">Wir haben eine mehr.</span></h2>
+  <div class="tafel__aktion">
+    <button class="knopf knopf--gross" id="reinKnopf"><span>Reinkommen</span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h13M13 6l6 6-6 6"/></svg></button>
+    <button class="knopf knopf--leise" data-hash="#/ueber-uns">Wer wir sind</button>
+  </div>
+  <p class="tafel__tipp"><span class="maus"></span>Bewege die Maus und schau dich um. Klick aufs Schild für Infos.</p>
+</section>
+
+<section class="tafel tafel--innen" id="tafelInnen" aria-label="Im Laden" hidden>
+  <p class="tafel__kicker">Du bist drin</p>
+  <h2 class="tafel__titel"><span>Schau dich um.</span></h2>
+  <p class="tafel__text">Tippe auf einen Bereich im Laden und geh näher ran.<span class="nur-touch"> Wische zur Seite, um dich umzusehen.</span></p>
+</section>
+
+<section class="tafel tafel--regal" id="tafelRegal" aria-label="Bereich" hidden>
+  <p class="tafel__kicker" id="regalKicker">Bereich</p>
+  <h2 class="tafel__titel neon" id="regalTitel"></h2>
+  <p class="tafel__text" id="regalText"></p>
+  <p class="tafel__hinweis" id="regalHinweis" hidden></p>
+</section>
+
+<!-- Produktleiste im Regal -->
+<div class="leiste" id="leiste" hidden>
+  <div class="leiste__spur" id="leisteSpur" role="list"></div>
+</div>
+
+<!-- Bereiche Leiste und Zurück -->
+<nav class="dock" id="dock" aria-label="Bereiche im Laden" hidden>
+  <button class="dock__zurueck" id="zurueck"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M19 12H6M11 6l-6 6 6 6"/></svg><span>Raus</span></button>
+  <div class="dock__liste" id="dockListe"></div>
+</nav>
+
+<button class="ueberspringen" id="ueberspringen" hidden>Überspringen</button>
+
+<!-- Produkt -->
+<aside class="produkt" id="produkt" role="dialog" aria-modal="true" aria-labelledby="pName" hidden>
+  <div class="produkt__hinter" data-zu></div>
+  <div class="produkt__karte">
+    <button class="schliessen" data-zu aria-label="Schließen"><span></span><span></span></button>
+    <div class="produkt__bild"><i class="produkt__glow"></i><img id="pBild" alt=""></div>
+    <div class="produkt__info">
+      <p class="produkt__kat" id="pKat"></p>
+      <h3 class="produkt__name" id="pName"></h3>
+      <p class="produkt__menge" id="pMenge"></p>
+      <p class="produkt__text" id="pText"></p>
+      <ul class="produkt__tags" id="pTags"></ul>
+      <p class="produkt__preis" id="pPreis">Preis im Laden</p>
+      <div class="produkt__nav">
+        <button class="knopf knopf--leise" id="pVor" aria-label="Vorheriges Produkt"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 6l-6 6 6 6"/></svg></button>
+        <span id="pZaehler"></span>
+        <button class="knopf knopf--leise" id="pNach" aria-label="Nächstes Produkt"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg></button>
+      </div>
+    </div>
+  </div>
+</aside>
+
+<!-- Seiten: Über uns, Besuch, Impressum, Datenschutz -->
+<div class="blatt" id="blatt" role="dialog" aria-modal="true" aria-labelledby="blattTitel" hidden>
+  <div class="blatt__hinter" data-blatt-zu></div>
+  <article class="blatt__inhalt" id="blattInhalt" tabindex="-1"></article>
+  <button class="schliessen schliessen--blatt" data-blatt-zu aria-label="Schließen"><span></span><span></span></button>
+</div>
+
+<noscript>
+  <div class="ohnejs">
+    <h2>The 25 Hours Store</h2>
+    <p>Ein Tag hat 24 Stunden. Wir haben eine mehr. Dein Späti im Märkisches Zentrum, Wilhelmsruher Damm 140, 13439 Berlin, Telefon 030 4155448.</p>
+    <p>Drinks, Snacks, Sweets, Eis, Bier und Wein, Zeitung und Alltag. Für den Rundgang durch den Laden bitte JavaScript aktivieren.</p>
+  </div>
+</noscript>
+
+<script src="vendor/gsap.min.js?v=202611021939"></script>
+<script src="js/daten.js?v=202611021939"></script>
+<script src="js/videos.js?v=202611021939"></script>
+<script src="js/buehne.js?v=202611021939"></script>
+<script src="js/app.js?v=202611021939"></script>
+</body>
+</html>
